@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageGalleryItem from './ImageGalleryItem';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import API from '../imagesApi';
 import Button from '../Button/Button';
 import { Loader } from '../Loader/Loader';
@@ -62,15 +62,21 @@ export default class ImageGallery extends React.Component  {
         
 
       API.fetchImages(searchQuery, currentPage)
-        .then((data) => this.setState((prevState) => (
+        .then((data) => {
+          this.setState((prevState) => (
         
-          {
-            images: [...prevState.images, ...data.hits],
-            currentPage: prevState.currentPage + 1
-          }  
-        ))         
+            {
+              images: [...prevState.images, ...data.hits],
+              currentPage: prevState.currentPage + 1,
+              currentPageImages: [...data.hits],
+            }
+          ));
+          if (data.hits.length === 0) {
+            toast.warn('Sorry, there are no images matching your search query. Please try again.');
+          }
+        }
                 )
-            .then(console.log)
+           
                 .catch(error => this.setState({ error }))
                 .finally(() => this.setState({ loading: false }));
     }
@@ -125,7 +131,7 @@ export default class ImageGallery extends React.Component  {
 
  
       render() {
-          const { loading, error, images, showModal, largeImageURL, currentPage } = this.state;
+          const { loading, error, images, showModal, largeImageURL, currentPageImages, currentPage } = this.state;
           const { searchQuery } = this.props;
     return (
       <div>
@@ -150,7 +156,7 @@ export default class ImageGallery extends React.Component  {
             {/*{images.length > 0 && <Button onClick={this.fetchImages}/>}*/}
 
         {/*{loading ? <Loader /> : (images.length > 0 && <Button onClick={this.fetchImages} />)}*/}
-        * {images.length > 0 && <Button onClick={this.fetchImages} />}
+        * {images.length > 0 && !(currentPageImages.length < 12) && <Button onClick={this.fetchImages} />}
        </div>
            
             
