@@ -20,9 +20,9 @@ export default class App extends React.Component {
 
  
 
-  handleFormSubmit = searchQuery => {
+  handleFormSubmit = query => {
     this.setState({
-      searchQuery,
+      searchQuery: query,
       currentPage: 1,
       images: [] 
     });
@@ -51,7 +51,7 @@ export default class App extends React.Component {
     return ( 
         
         <AppStyle>     
-          <Searchbar onSubmit={this.handleFormSubmit}/>          
+          <Searchbar onSubmit={this.handleFormSubmit} searchQuery={this.searchQuery}/>          
         <ImageGallery searchQuery={this.state.searchQuery} />
           <ToastContainer autoClose={3000} />      
        </AppStyle>

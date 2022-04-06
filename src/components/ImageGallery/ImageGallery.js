@@ -25,11 +25,21 @@ export default class ImageGallery extends React.Component  {
     componentDidUpdate(prevProps, prevState) {
         const prevName = prevProps.searchQuery;
         const nextName = this.props.searchQuery;
-        //const { currentPage } = this.state;
+        const { currentPage } = this.state;
 
         if (prevName !== nextName) {
+          this.fetchImages();
+      //     this.setState({ loading: true, images: [], currentPage: 1 });
 
-           this.fetchImages()
+      //     API.fetchImages(nextName, currentPage)
+      //       .then((data) => {
+      //         this.setState({
+      //   images: data.hits  
+      // });
+      // })
+      //               .catch(error => this.setState({ error }))
+      //               .finally(() => this.setState({ loading: false }));
+          
       //     API.fetchImages(nextName, currentPage)
       //       .then((data) => {
       //         this.setState( prevState => ({
@@ -44,11 +54,11 @@ export default class ImageGallery extends React.Component  {
     
     
 
-    fetchImages() {
+    fetchImages = () => {
         const { currentPage } = this.state;
         const { searchQuery } = this.props;
 
-        this.setState({ loading: true, images: [] });
+        this.setState({ loading: true, images: []});
         
 
       API.fetchImages(searchQuery, currentPage)
@@ -57,10 +67,8 @@ export default class ImageGallery extends React.Component  {
           {
             images: [...prevState.images, ...data.hits],
             currentPage: prevState.currentPage + 1
-          }
-          
-        ))
-                 
+          }  
+        ))         
                 )
             .then(console.log)
                 .catch(error => this.setState({ error }))
@@ -69,11 +77,11 @@ export default class ImageGallery extends React.Component  {
     
     
     
-    // handleLoadMore() {
-    //     const nextName = this.props.searchQuery;
+    // handleLoadMore = () => {
+    //     const {searchQuery} = this.props;
     //     const { currentPage } = this.state;
     //     this.setState({ loading: true, currentPage: currentPage + 1 });
-    //     imagesApi.fetchImages(nextName, currentPage)
+    //     API.fetchImages(searchQuery, currentPage)
     //             .then((data) => this.setState(({ images }) => (
     //                 {
     //                     images: [...images, ...data.hits],
@@ -117,7 +125,7 @@ export default class ImageGallery extends React.Component  {
 
  
       render() {
-          const { loading, error, images, showModal, largeImageURL } = this.state;
+          const { loading, error, images, showModal, largeImageURL, currentPage } = this.state;
           const { searchQuery } = this.props;
     return (
       <div>
