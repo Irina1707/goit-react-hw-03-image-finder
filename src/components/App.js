@@ -51,7 +51,7 @@ export default class App extends React.Component {
     return ( 
         
         <AppStyle>     
-          <Searchbar onSubmit={this.handleFormSubmit} searchQuery={this.searchQuery}/>          
+          <Searchbar onSubmit={this.handleFormSubmit} searchQuery={this.state.searchQuery}/>          
         <ImageGallery searchQuery={this.state.searchQuery} />
           <ToastContainer autoClose={3000} />      
        </AppStyle>

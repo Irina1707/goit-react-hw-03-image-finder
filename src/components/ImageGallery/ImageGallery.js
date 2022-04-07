@@ -25,7 +25,7 @@ export default class ImageGallery extends React.Component  {
     componentDidUpdate(prevProps, prevState) {
         const prevName = prevProps.searchQuery;
         const nextName = this.props.searchQuery;
-        const { currentPage } = this.state;
+        //const { currentPage } = this.state;
 
         if (prevName !== nextName) {
           this.fetchImages();
@@ -58,9 +58,8 @@ export default class ImageGallery extends React.Component  {
         const { currentPage } = this.state;
         const { searchQuery } = this.props;
 
-        this.setState({ loading: true, images: []});
+        this.setState({ loading: true, images: [], currentPage: 1 });
         
-
       API.fetchImages(searchQuery, currentPage)
         .then((data) => {
           this.setState((prevState) => (
@@ -69,34 +68,33 @@ export default class ImageGallery extends React.Component  {
               images: [...prevState.images, ...data.hits],
               currentPage: prevState.currentPage + 1,
               currentPageImages: [...data.hits],
+              error: ''
             }
           ));
           if (data.hits.length === 0) {
-            toast.warn('Sorry, there are no images matching your search query. Please try again.');
-          }
+            toast.warn(`Sorry, there are no images matching ${searchQuery}. Please try again.`);
+          }   
         }
                 )
-           
                 .catch(error => this.setState({ error }))
                 .finally(() => this.setState({ loading: false }));
     }
     
     
     
-    // handleLoadMore = () => {
-    //     const {searchQuery} = this.props;
-    //     const { currentPage } = this.state;
-    //     this.setState({ loading: true, currentPage: currentPage + 1 });
-    //     API.fetchImages(searchQuery, currentPage)
-    //             .then((data) => this.setState(({ images }) => (
-    //                 {
-    //                     images: [...images, ...data.hits],
+    handleLoadMore = () => {
+        const {searchQuery} = this.props;
+        const { currentPage } = this.state;
+        this.setState({ loading: true, currentPage: currentPage + 1 });
+        API.fetchImages(searchQuery, currentPage)
+                .then((data) => this.setState(({ images }) => (
+                    {
+                        images: [...images, ...data.hits],
                  
-    //                 })))
-    //             .catch(error => this.setState({ error }))
-    //             .finally(() => this.setState({ loading: false }));
+                    })))
+                .finally(() => this.setState({ loading: false }));
 
-    // }
+    }
 
   
  
@@ -131,14 +129,12 @@ export default class ImageGallery extends React.Component  {
 
  
       render() {
-          const { loading, error, images, showModal, largeImageURL, currentPageImages, currentPage } = this.state;
+          const { loading, error, images, showModal, largeImageURL, currentPageImages } = this.state;
           const { searchQuery } = this.props;
     return (
       <div>
         {error && <p>{error.message}</p>}
-         
-        {/* {images && <ImageGallery images={images}/>} */}
-          
+    
         {loading && <Loader />}
             <ToastContainer autoClose={3000} />
             
@@ -150,13 +146,10 @@ export default class ImageGallery extends React.Component  {
                     largeImageURL={largeImageURL}
                     alt={searchQuery}
                     onClick={this.handleLargeImage} />))}
-            </ImageGalleryStyle>}
+                </ImageGalleryStyle>}
 
         {showModal && <Modal largeImageURL={largeImageURL} onClose={this.closeModal}/>}
-            {/*{images.length > 0 && <Button onClick={this.fetchImages}/>}*/}
-
-        {/*{loading ? <Loader /> : (images.length > 0 && <Button onClick={this.fetchImages} />)}*/}
-        * {images.length > 0 && !(currentPageImages.length < 12) && <Button onClick={this.fetchImages} />}
+        {images.length > 0 && !(currentPageImages.length < 12) && <Button onClick={this.handleLoadMore} />}
        </div>
            
             
