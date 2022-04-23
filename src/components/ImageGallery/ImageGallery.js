@@ -5,7 +5,6 @@ import API from '../imagesApi';
 import Button from '../Button/Button';
 import { Loader } from '../Loader/Loader';
 import Modal from '../Modal/Modal'
-//import { ImSearch } from '/react-icons/fa';
 import { ImageGalleryStyle } from './ImageGallery.styled';
 
 export default class ImageGallery extends React.Component  {
@@ -19,58 +18,31 @@ export default class ImageGallery extends React.Component  {
     showModal: false
     }
 
-    
-
- 
     componentDidUpdate(prevProps, prevState) {
         const prevName = prevProps.searchQuery;
         const nextName = this.props.searchQuery;
-        //const { currentPage } = this.state;
 
         if (prevName !== nextName) {
           this.fetchImages();
-      //     this.setState({ loading: true, images: [], currentPage: 1 });
-
-      //     API.fetchImages(nextName, currentPage)
-      //       .then((data) => {
-      //         this.setState({
-      //   images: data.hits  
-      // });
-      // })
-      //               .catch(error => this.setState({ error }))
-      //               .finally(() => this.setState({ loading: false }));
-          
-      //     API.fetchImages(nextName, currentPage)
-      //       .then((data) => {
-      //         this.setState( prevState => ({
-      //   images: [...prevState.images, ...data.hits], 
-      //   currentPage: prevState.currentPage + 1, 
-      // }));
-      // })
-      //               .catch(error => this.setState({ error }))
-      //               .finally(() => this.setState({ loading: false }));
              }
         }
     
-    
-
     fetchImages = () => {
-        const { currentPage } = this.state;
+        
         const { searchQuery } = this.props;
 
         this.setState({ loading: true, images: [], currentPage: 1 });
         
-      API.fetchImages(searchQuery, currentPage)
+      API.fetchImages(searchQuery,  1)
         .then((data) => {
-          this.setState((prevState) => (
+          this.setState(
         
             {
-              images: [...prevState.images, ...data.hits],
-              currentPage: prevState.currentPage + 1,
+              images: [...data.hits],
               currentPageImages: [...data.hits],
               error: ''
             }
-          ));
+          );
           if (data.hits.length === 0) {
             toast.warn(`Sorry, there are no images matching ${searchQuery}. Please try again.`);
           }   
@@ -86,17 +58,14 @@ export default class ImageGallery extends React.Component  {
         const {searchQuery} = this.props;
         const { currentPage } = this.state;
         this.setState({ loading: true, currentPage: currentPage + 1 });
-        API.fetchImages(searchQuery, currentPage)
+        API.fetchImages(searchQuery, currentPage + 1)
                 .then((data) => this.setState(({ images }) => (
                     {
-                        images: [...images, ...data.hits],
-                 
+                        images: [...images, ...data.hits],              
                     })))
                 .finally(() => this.setState({ loading: false }));
 
     }
-
-  
  
    handleLargeImage = (image) => {
     this.setState({

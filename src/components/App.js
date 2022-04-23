@@ -4,14 +4,6 @@ import React from "react";
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import { AppStyle } from './App.styled';
-//import imagesApi from './imagesApi';
-//import { Loader } from './Loader/Loader';
-//import Modal from './Modal/Modal'
-
-//import { ImSearch } from '/react-icons/fa';
-//const BASE_URL = 'https://pixabay.com/api/';
-//const API_KEY = '25444369-ba6b8c690cc86ce1f63d356ab';
-
 
 export default class App extends React.Component {
   state = { 
